@@ -13,8 +13,9 @@ float umidade = 0, temperatura = 0, condutividade = 0;
 
 ros::NodeHandle nh;
 
-labvirtual_messages::Sensor5TE sensor_0;
-ros::Publisher pub_arduino_data("arduino_data", &sensor_0);
+labvirtual_messages::Sensor5TE sensor;
+labvirtual_messages::Sensor5TEArray sensores;
+ros::Publisher pub_arduino_data("arduino_data", &sensores);
 
 void ler_sensor() {
   soilMoistureValue = analogRead(A0);
@@ -27,12 +28,19 @@ void ler_sensor() {
     soilmoisturepercent = soilmoisturepercent;
   }
 
-  sensor_0.id = 0;
-  sensor_0.umidade = soilmoisturepercent;
-  sensor_0.temperatura = 32.0;
-  sensor_0.condutividade = 12.0;
+  sensor.id = 0;
+  sensor.umidade = soilmoisturepercent;
+  sensor.temperatura = 32.0;
+  sensor.condutividade = 12.0;
+  sensores.sensors[0] = sensor;
+  
+  sensor.id = 1;
+  sensor.umidade = 12.6;
+  sensor.temperatura = 23.0;
+  sensor.condutividade = 21.0;
+  sensores.sensors[1] = sensor;
 
-  pub_arduino_data.publish(&sensor_0);
+  pub_arduino_data.publish(&sensores);
 }
 
 void setup() {
